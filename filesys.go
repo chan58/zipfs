@@ -86,7 +86,7 @@ func New(name string) (*ZipFS, error) {
 	return fs, nil
 }
 
-// Open a path withing the Zip filesystem for read
+// Open a path within the Zip filesystem for read
 func (fs *ZipFS) Open(name string) (http.File, error) {
 	fi, err := fs.openFileInfo(name)
 	if err != nil {
