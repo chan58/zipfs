@@ -28,7 +28,7 @@ import (
 	"time"
 )
 
-// Implement the http.FileSystem interface.
+// ZipFS implements the http.FileSystem interface.
 type ZipFS struct {
 	readerAt  io.ReaderAt
 	closer    io.Closer
@@ -43,6 +43,7 @@ var (
 	errDirectory        = errors.New("is a directory")
 )
 
+// New instantiates and returns a Zip filesystem
 func New(name string) (*ZipFS, error) {
 	file, err := os.Open(name)
 	if err != nil {
@@ -85,6 +86,7 @@ func New(name string) (*ZipFS, error) {
 	return fs, nil
 }
 
+// Open a path withing the Zip filesystem for read
 func (fs *ZipFS) Open(name string) (http.File, error) {
 	fi, err := fs.openFileInfo(name)
 	if err != nil {
@@ -93,6 +95,7 @@ func (fs *ZipFS) Open(name string) (http.File, error) {
 	return fi.openReader(name), nil
 }
 
+// Close an open file path
 func (fs *ZipFS) Close() error {
 	fs.reader = nil
 	fs.readerAt = nil
@@ -136,7 +139,7 @@ func (fs *ZipFS) openFileInfo(name string) (*fileInfo, error) {
 	return fi, nil
 }
 
-// fileMap keeps track of fileInfos
+// fileInfoMap keeps track of fileInfos
 type fileInfoMap map[string]*fileInfo
 
 func (fm fileInfoMap) FindOrCreate(name string) *fileInfo {
